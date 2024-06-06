@@ -15,11 +15,26 @@ const normalizeURL = (url) => {
 		.replace(/\/+$/, ''); 
 }
 
+/**
+ * Parses a raw HTML block for anchors and returns their URLs as absolute URLs
+ *
+ * @param {String}	htmlBody	A block of HTML text
+ * @param {String}	baseURL		The source URL for htmlBody
+ *
+ * @return {Array}	An Array of URL strings corresponding to anchors in the htmlBody
+ */
 const getURLsFromHTML = (htmlBody, baseURL) => {
 	const anchors = Array.from(new JSDOM(htmlBody).window.document.querySelectorAll('a'));
 	return anchors.map(anchor => (anchor.href.startsWith('/')) ? baseURL + anchor.href : anchor.href);
 }
 
+/**
+ * Conducts a fetch at the provided URL and returns any html found there.
+ *
+ * @param {String}	url	the target URL
+ *
+ * @return {String}	An html block found at the target URL
+ */
 const pullHTML = async (url) => {
 	const result = await fetch(url);
 	if(!result.ok) throw Error(
@@ -31,6 +46,15 @@ const pullHTML = async (url) => {
 	return await result.text();
 }
 
+/**
+ * Recursively logs the internal links within a given web domain
+ *
+ * @param {String}	rootURL			The root webpage to crawl from
+ * @patam {String}	currentURL = rootURL	Tracker for the current page
+ * @param {Map}		pages = new Map()	Map object for storing link logs
+ *
+ * @return {Map}	A map of URL keys to links objects containing link counts
+ */
 const crawlPage = async (rootURL, currentURL = rootURL, pages = new Map()) => {
 	if(!currentURL.includes(new URL(rootURL).hostname)) return pages;
 	const normalURL = normalizeURL(currentURL);

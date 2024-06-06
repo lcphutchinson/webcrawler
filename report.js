@@ -1,3 +1,11 @@
+/**
+ * Merges link log arrays in descending order of links values
+ *
+ * @param {Array}	lsA	First operand Array
+ * @param {Array}	lsB	Second operand Array
+ *
+ * @return	A single array containing the elements of lsA and lsB in descending order
+ */
 const merge = (lsA, lsB) => {
 	if(!lsA) return lsB;
 	if(!lsB) return lsA;
@@ -17,7 +25,14 @@ const merge = (lsA, lsB) => {
 	if(ctB < lsB.length) return output.concat(lsB.slice(ctB));
 	return output;
 }
-			
+
+/**
+ * Recursive MergeSort
+ *
+ * @param {Array}	ls	Link log Array for sorting
+ *
+ * @return	A descending order array of link log
+ */
 const mergeSort = (ls) => {
 	const pivot = ls.length >> 1;
 	const lsA = ls.slice(0, pivot);
